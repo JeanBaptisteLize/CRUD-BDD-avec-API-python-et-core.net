@@ -1,0 +1,51 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=123
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '123' -Q 'SELECT 1' -C || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+
+  python-api:
+    build:
+      context: ./python-api
+    container_name: python-api
+    environment:
+      DB_HOST: "sqlserver"
+      DB_PORT: "1433"
+      DB_USER: "sa"
+      DB_PASSWORD: "123"
+      DB_NAME: "FormationDB"
+    ports:
+      - "8000:8000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+
+  dotnet-api:
+    build:
+      context: ./dotnet-api
+    container_name: dotnet-api
+    environment:
+      ConnectionStrings__Default: "Server=sqlserver,1433;Database=FormationDB;User Id=sa;Password=123;TrustServerCertificate=True;"
+      ASPNETCORE_URLS: "http://+:8080"
+    ports:
+      - "5000:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sqlserver_data:
