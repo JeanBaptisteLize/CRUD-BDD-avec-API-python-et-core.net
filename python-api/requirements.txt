@@ -1,4 +1,9 @@
 fastapi
+
+python-jose         # signe et vérifie les JWT
+passlib[bcrypt]     # pour le hachage sécurisé des mots de passe
+python-multipart    # pour gérer les formulaires de connexion ( pour le login Oauth2 )
+
 uvicorn[standard]
 sqlalchemy
 pyodbc
