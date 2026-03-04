@@ -56,6 +56,7 @@ CREATE TABLE dbo.Utilisateurs (
     nom            CHAR(60) NOT NULL,
     prenom         CHAR(60) NOT NULL,
     email          CHAR(120) NOT NULL,
+    password       CHAR(255) NOT NULL,   -- pour stocker le hash du mot de passe
     CONSTRAINT PK_Utilisateurs PRIMARY KEY (id_utilisateur)
 );
 GO
