@@ -6,6 +6,8 @@ python-multipart    # pour gérer les formulaires de connexion ( pour le login O
 
 uvicorn[standard]
 sqlalchemy
-pyodbc
+pymssql
 pydantic
 pydantic[email]
+
+azure-storage-blob

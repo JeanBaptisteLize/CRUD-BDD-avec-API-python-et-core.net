@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.db import get_db
 from app.schemas import UtilisateurIn
@@ -47,3 +48,4 @@ def register_user(user: UtilisateurIn, db: Session = Depends(get_db)):
 # @router.post("/login") # email + mdp -> token JWT
 
 # @router.get("/me") # token JWT -> infos de l'utilisateur connecté
+

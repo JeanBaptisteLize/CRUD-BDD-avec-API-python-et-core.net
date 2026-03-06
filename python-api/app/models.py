@@ -16,6 +16,7 @@ from app.db import Base
 
 class Utilisateur(Base):
     __tablename__ = "utilisateurs"
+    __table_args__ = {"schema": "dbo"}  # ✅ important si table dbo.utilisateurs
 
     id_utilisateur = Column(Integer, primary_key=True, index=True)
     nom = Column(String, nullable=False)

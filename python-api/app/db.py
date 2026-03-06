@@ -1,24 +1,32 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
+import pymssql
+from dotenv import load_dotenv
 
+from azure.storage.blob import BlobServiceClient
 
-# Configuration de la connexion à SQL Server
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "1433")
+load_dotenv()
+
+# Configuration de la connexion à SQL Server avec notre fichier environnement
+DB_HOST = os.getenv("DB_HOST", "localhost/10.0.1.4")
+DB_PORT = int(os.getenv("DB_PORT", "1433"))
 DB_USER = os.getenv("DB_USER", "sa")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Str0ng!Passw0rd123")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Str0ng!Passw0rd123/monmdpssecert")
 DB_NAME = os.getenv("DB_NAME", "FormationDB")
 
-# ODBC Driver 18 est necessaire pour la connexion à SQL server
+# pymssql est necessaire pour la connexion à SQL server
 CONNECT_STRING = (
-    f"mssql+pyodbc://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    "?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
+    f"mssql+pymssql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
+
 
 # creation du moteur SQLAlchemy et de la session de base de données
 engine = create_engine(CONNECT_STRING, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+with engine.connect() as conn:
+    print("DB:", conn.execute(text("SELECT DB_NAME()")).scalar())
 
 
 # Base pour les modèles SQLAlchemy (models.py)
