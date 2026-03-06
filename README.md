@@ -47,4 +47,22 @@ docker compose build --no-cache python-api
 docker compose up --build
 ```
 
+3) créer le .env
 
+```python
+# Pour VM
+# DB_HOST="10.0.1.4"
+# DB_USER="sa"
+# DB_PASSWORD=""
+# DB_NAME="FormationDB"
+# DB_PORT=1433
+# AZURE_STORAGE_CONNECTION_STRING=""
+
+
+# Pour local
+DB_HOST="localhost"
+DB_USER="sa"
+DB_PASSWORD="Str0ng!Passw0rd123" # le même utilisé dans docker-compose.yml
+DB_NAME="FormationDB"
+DB_PORT=1433
+```
