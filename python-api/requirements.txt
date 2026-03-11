@@ -1,0 +1,18 @@
+fastapi
+dotenv
+
+python-jose         # signe et vérifie les JWT
+passlib[bcrypt]     # pour le hachage sécurisé des mots de passe
+python-multipart    # pour gérer les formulaires de connexion ( pour le login Oauth2 )
+bcrypt
+
+uvicorn[standard]
+sqlalchemy
+pydantic
+pydantic[email]
+pymssql
+
+ldap3
+
+# Environnement Microsoft Azure
+azure-storage-blob
