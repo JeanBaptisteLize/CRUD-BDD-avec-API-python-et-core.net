@@ -40,7 +40,7 @@ uvicorn app.main:app --reload
 Maintenant pour accéder à notre Swagger apres le lancement du serveur:
 
 ```bash
-http://127.0.0.1:8000
+http://127.0.0.1:8000/docs
 ```
 
 ---
@@ -58,9 +58,9 @@ http://localhost:5000/swagger
 
 ---
 
-### II - .NET Core (C#) :
+### III - Conteneurs Docker :
 
-2) Docker : lancement des 3 conteners (sur Bash)
+Docker : lancement des 3 conteners (sur Bash)
 
 Ouvrir docker desktop afin  de bien visualiser l'activation des conteneurs
 On effectuer la première ligne de commande si nos conteneurs dockers n'ont pas encore été crées
@@ -69,13 +69,16 @@ On effectuer la première ligne de commande si nos conteneurs dockers n'ont pas 
 docker compose down
 docker compose build --no-cache python-api
 
+# Lancement de nos conteneurs (à utiliser à chaque fois apres la création initiale des conteneurs avec la commande du dessus)
 docker compose up --build
 ```
 
-3) créer le .env à la racine de notre projet
+### Création de notre fichier environnement
+
+Renommer le fichier modele ``env.exemple`` en ``.env`` qui contient l'initialisation de nos variables d'environnement utilisées pour la génération de JWT, la connection à la DB et le hachage de nos mots de passe.
 
 ```python
-## Si souhaite communiquer avec une DB sur une VM depuis une auter VM
+## Si souhaite communiquer avec une DB sur une VM(Database) depuis une autre VM(Backend)
 # DB_HOST="10.0.1.4"
 # DB_USER="sa"
 # DB_PASSWORD=""
@@ -90,7 +93,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES="10"
 # Pour local
 DB_HOST="localhost"
 DB_USER="sa"
-DB_PASSWORD="Str0ng!Passw0rd123" # le même utilisé dans docker-compose.yml
+DB_PASSWORD="Str0ng!Passw0rd123"  # le même mdp générique utilisé dans docker-compose.yml
 DB_NAME="FormationDB"
 DB_PORT=1433
 

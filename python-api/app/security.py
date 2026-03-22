@@ -29,7 +29,7 @@ def verify_password(password: str, hashed_password: str):
 # Création de la clé JWT à partir des données utilisateurs (id,email,password haché)
 def create_access_token(data: str|dict):
     if isinstance(data, str):
-        to_encode = {"date": data}
+        to_encode = {"sub": data}
     else:
         to_encode = data.copy()
     

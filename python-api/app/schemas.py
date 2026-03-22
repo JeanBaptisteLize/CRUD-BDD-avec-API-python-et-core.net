@@ -39,7 +39,7 @@ class SessionIn(BaseModel):
     date_fin: str
     lieu: str
     capacite: int
-    mode: Optional[int] = None  # 0/1
+    mode_presentiel: Optional[int] = None  # 0/1
 
 class ResultatIn(BaseModel):
     id_module: int
@@ -49,7 +49,7 @@ class ResultatIn(BaseModel):
     tentative: Optional[int] = None
 
 class RecommendationIn(BaseModel):
-    date: str
+    date_reco: str
     score_pertinence: int
     motif: Optional[str] = None
 

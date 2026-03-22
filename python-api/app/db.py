@@ -1,7 +1,6 @@
 import os
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-import pymssql
 from dotenv import load_dotenv
 
 from azure.storage.blob import BlobServiceClient
@@ -15,7 +14,7 @@ DB_USER = os.getenv("DB_USER", "sa")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "Str0ng!Passw0rd123/monmdpssecert")
 DB_NAME = os.getenv("DB_NAME", "FormationDB")
 
-# pymssql est necessaire pour la connexion à SQL server
+# pymssql est necessaire pour la connexion à SQL server 
 CONNECT_STRING = (
     f"mssql+pymssql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
@@ -25,8 +24,13 @@ CONNECT_STRING = (
 engine = create_engine(CONNECT_STRING, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-with engine.connect() as conn:
-    print("DB:", conn.execute(text("SELECT DB_NAME()")).scalar())
+
+# Tester si la DB est dispo (Docker allumé)
+try:
+    with engine.connect() as conn:
+        print("DB:", conn.execute(text("SELECT DB_NAME()")).scalar())
+except Exception as e:
+    print(f"[WARN] Impossible de se connecter à la DB au démarrage: {e}")
 
 
 # Base pour les modèles SQLAlchemy (models.py)
