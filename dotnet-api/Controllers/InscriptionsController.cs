@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using DotnetApi.Data;
 using DotnetApi.Models;
 
+[Authorize]
 [ApiController]
 [Route("inscriptions")]
 public class InscriptionsController : ControllerBase
 {
     private readonly AppDbContext _db;
-    public InscriptionsController(AppDbContext db){_db = db;}
+    public InscriptionsController(AppDbContext db) { _db = db; }
 
 
     [HttpGet]
@@ -21,7 +23,7 @@ public class InscriptionsController : ControllerBase
     {
         _db.Inscrire.Add(link);
         await _db.SaveChangesAsync();
-        return StatusCode(201, link);
+        return StatusCode(201, new { message = "Inscription créée avec succès!", inscription = link });
     }
 
 
@@ -33,10 +35,10 @@ public class InscriptionsController : ControllerBase
                 x.IdUtilisateur == idUtilisateur &&
                 x.IdSession == idSession);
 
-        if (link == null) return NotFound();
+        if (link == null) return NotFound(new { message = "Inscription non trouvée" });
 
         _db.Inscrire.Remove(link);
         await _db.SaveChangesAsync();
-        return NoContent();
+        return Ok(new { message = "Inscription supprimée avec succès!" });
     }
 }

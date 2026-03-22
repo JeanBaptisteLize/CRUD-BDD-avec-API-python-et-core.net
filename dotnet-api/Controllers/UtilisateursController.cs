@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using DotnetApi.Data;
 using DotnetApi.Models;
 
+[Authorize]
 [ApiController]
 [Route("utilisateurs")]
 public class UtilisateursController : ControllerBase
 {
     private readonly AppDbContext _db;
-    public UtilisateursController(AppDbContext db){_db = db;}
+    public UtilisateursController(AppDbContext db) { _db = db; }
 
 
     [HttpGet]
@@ -20,7 +22,8 @@ public class UtilisateursController : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         var obj = await _db.Utilisateurs.FindAsync(id);
-        return obj == null ? NotFound() : Ok(obj);
+        if (obj == null) return NotFound(new { message = "Utilisateur non trouvé" });
+        return Ok(obj);
     }
 
 
@@ -29,7 +32,7 @@ public class UtilisateursController : ControllerBase
     {
         _db.Utilisateurs.Add(obj);
         await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(Get), new { id = obj.IdUtilisateur }, obj);
+        return StatusCode(201, new { message = "Utilisateur créé avec succès!", utilisateur = obj });
     }
 
 
@@ -37,24 +40,25 @@ public class UtilisateursController : ControllerBase
     public async Task<IActionResult> Update(int id, Utilisateur payload)
     {
         var obj = await _db.Utilisateurs.FindAsync(id);
-        if (obj == null) return NotFound();
+        if (obj == null) return NotFound(new { message = "Utilisateur non trouvé" });
 
         obj.Nom = payload.Nom;
         obj.Prenom = payload.Prenom;
         obj.Email = payload.Email;
 
         await _db.SaveChangesAsync();
-        return Ok(obj);
+        return Ok(new { message = "Utilisateur mis à jour avec succès!", utilisateur = obj });
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         var obj = await _db.Utilisateurs.FindAsync(id);
-        if (obj == null) return NotFound();
+        if (obj == null) return NotFound(new { message = "Utilisateur non trouvé" });
 
         _db.Utilisateurs.Remove(obj);
         await _db.SaveChangesAsync();
-        return NoContent();
+        return Ok(new { message = "Utilisateur supprimé avec succès!" });
     }
 }
